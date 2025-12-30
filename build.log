@@ -1,0 +1,158 @@
+PICO_SDK_PATH is C:/Users/GabrielEggert/.pico-sdk/sdk/2.2.0
+Target board (PICO_BOARD) is 'pico'.
+Using board configuration from C:/Users/GabrielEggert/.pico-sdk/sdk/2.2.0/src/boards/include/boards/pico.h
+Pico Platform (PICO_PLATFORM) is 'rp2040'.
+CMake Error at build/_deps/freertos-kernel-src/CMakeLists.txt:35 (message):
+   FREERTOS_PORT is not set. Please specify it from top-level CMake file (example):
+    set(FREERTOS_PORT GCC_ARM_CM4F CACHE STRING "")
+   or from CMake command line option:
+    -DFREERTOS_PORT=GCC_ARM_CM4F
+   
+   Available port options:
+   BCC_16BIT_DOS_FLSH186            - Compiller: BCC           Target: 16 bit DOS Flsh186
+   BCC_16BIT_DOS_PC                 - Compiller: BCC           Target: 16 bit DOS PC
+   CCS_ARM_CM3                      - Compiller: CCS           Target: ARM Cortex-M3
+   CCS_ARM_CM4F                     - Compiller: CCS           Target: ARM Cortex-M4 with FPU
+   CCS_ARM_CR4                      - Compiller: CCS           Target: ARM Cortex-R4
+   CCS_MSP430X                      - Compiller: CCS           Target: MSP430X
+   CODEWARRIOR_COLDFIRE_V1          - Compiller: CoreWarrior   Target: ColdFire V1
+   CODEWARRIOR_COLDFIRE_V2          - Compiller: CoreWarrior   Target: ColdFire V2
+   CODEWARRIOR_HCS12                - Compiller: CoreWarrior   Target: HCS12
+   GCC_ARM_CA9                      - Compiller: GCC           Target: ARM Cortex-A9
+   GCC_ARM_CA53_64_BIT              - Compiller: GCC           Target: ARM Cortex-A53 64 bit
+   GCC_ARM_CA53_64_BIT_SRE          - Compiller: GCC           Target: ARM Cortex-A53 64 bit SRE
+   GCC_ARM_CM0                      - Compiller: GCC           Target: ARM Cortex-M0
+   GCC_ARM_CM3                      - Compiller: GCC           Target: ARM Cortex-M3
+   GCC_ARM_CM3_MPU                  - Compiller: GCC           Target: ARM Cortex-M3 with MPU
+   GCC_ARM_CM4_MPU                  - Compiller: GCC           Target: ARM Cortex-M4 with MPU
+   GCC_ARM_CM4F                     - Compiller: GCC           Target: ARM Cortex-M4 with FPU
+   GCC_ARM_CM7                      - Compiller: GCC           Target: ARM Cortex-M7
+   GCC_ARM_CM23_NONSECURE           - Compiller: GCC           Target: ARM Cortex-M23 non-secure
+   GCC_ARM_CM23_SECURE              - Compiller: GCC           Target: ARM Cortex-M23 secure
+   GCC_ARM_CM23_NTZ_NONSECURE       - Compiller: GCC           Target: ARM Cortex-M23 non-trustzone non-secure
+   GCC_ARM_CM33_NONSECURE           - Compiller: GCC           Target: ARM Cortex-M33 non-secure
+   GCC_ARM_CM33_SECURE              - Compiller: GCC           Target: ARM Cortex-M33 secure
+   GCC_ARM_CM33_NTZ_NONSECURE       - Compiller: GCC           Target: ARM Cortex-M33 non-trustzone non-secure
+   GCC_ARM_CM33_TFM                 - Compiller: GCC           Target: ARM Cortex-M33 non-secure for TF-M
+   GCC_ARM_CM55_NONSECURE           - Compiller: GCC           Target: ARM Cortex-M55 non-secure
+   GCC_ARM_CM55_SECURE              - Compiller: GCC           Target: ARM Cortex-M55 secure
+   GCC_ARM_CM55_NTZ_NONSECURE       - Compiller: GCC           Target: ARM Cortex-M55 non-trustzone non-secure
+   GCC_ARM_CM55_TFM                 - Compiller: GCC           Target: ARM Cortex-M55 non-secure for TF-M
+   GCC_ARM_CM85_NONSECURE           - Compiller: GCC           Target: ARM Cortex-M85 non-secure
+   GCC_ARM_CM85_SECURE              - Compiller: GCC           Target: ARM Cortex-M85 secure
+   GCC_ARM_CM85_NTZ_NONSECURE       - Compiller: GCC           Target: ARM Cortex-M85 non-trustzone non-secure
+   GCC_ARM_CM85_TFM                 - Compiller: GCC           Target: ARM Cortex-M85 non-secure for TF-M
+   GCC_ARM_CR5                      - Compiller: GCC           Target: ARM Cortex-R5
+   GCC_ARM_CRX_NOGIC                - Compiller: GCC           Target: ARM Cortex-Rx no GIC
+   GCC_ARM7_AT91FR40008             - Compiller: GCC           Target: ARM7 Atmel AT91R40008
+   GCC_ARM7_AT91SAM7S               - Compiller: GCC           Target: ARM7 Atmel AT91SAM7S
+   GCC_ARM7_LPC2000                 - Compiller: GCC           Target: ARM7 LPC2000
+   GCC_ARM7_LPC23XX                 - Compiller: GCC           Target: ARM7 LPC23xx
+   GCC_ATMEGA323                    - Compiller: GCC           Target: ATMega323
+   GCC_AVR32_UC3                    - Compiller: GCC           Target: AVR32 UC3
+   GCC_COLDFIRE_V2                  - Compiller: GCC           Target: ColdFire V2
+   GCC_CORTUS_APS3                  - Compiller: GCC           Target: CORTUS APS3
+   GCC_H8S2329                      - Compiller: GCC           Target: H8S2329
+   GCC_HCS12                        - Compiller: GCC           Target: HCS12
+   GCC_IA32_FLAT                    - Compiller: GCC           Target: IA32 flat
+   GCC_MICROBLAZE                   - Compiller: GCC           Target: MicroBlaze
+   GCC_MICROBLAZE_V8                - Compiller: GCC           Target: MicroBlaze V8
+   GCC_MICROBLAZE_V9                - Compiller: GCC           Target: MicroBlaze V9
+   GCC_MSP430F449                   - Compiller: GCC           Target: MSP430F449
+   GCC_NIOSII                       - Compiller: GCC           Target: NiosII
+   GCC_PPC405_XILINX                - Compiller: GCC           Target: Xilinx PPC405
+   GCC_PPC440_XILINX                - Compiller: GCC           Target: Xilinx PPC440
+   GCC_RISC_V                       - Compiller: GCC           Target: RISC-V
+   GCC_RISC_V_PULPINO_VEGA_RV32M1RM - Compiller: GCC           Target: RISC-V Pulpino Vega RV32M1RM
+   GCC_RL78                         - Compiller: GCC           Target: Renesas RL78
+   GCC_RX100                        - Compiller: GCC           Target: Renesas RX100
+   GCC_RX200                        - Compiller: GCC           Target: Renesas RX200
+   GCC_RX600                        - Compiller: GCC           Target: Renesas RX600
+   GCC_RX600_V2                     - Compiller: GCC           Target: Renesas RX600 v2
+   GCC_RX700_V3_DPFPU               - Compiller: GCC           Target: Renesas RX700 v3 with DPFPU
+   GCC_STR75X                       - Compiller: GCC           Target: STR75x
+   GCC_TRICORE_1782                 - Compiller: GCC           Target: TriCore 1782
+   GCC_ARC_EM_HS                    - Compiller: GCC           Target: DesignWare ARC EM HS
+   GCC_ARC_V1                       - Compiller: GCC           Target: DesignWare ARC v1
+   GCC_ATMEGA                       - Compiller: GCC           Target: ATmega
+   GCC_POSIX                        - Compiller: GCC           Target: Posix
+   GCC_RP2040                       - Compiller: GCC           Target: RP2040 ARM Cortex-M0+
+   GCC_XTENSA_ESP32                 - Compiller: GCC           Target: Xtensa ESP32
+   GCC_AVRDX                        - Compiller: GCC           Target: AVRDx
+   GCC_AVR_MEGA0                    - Compiller: GCC           Target: AVR Mega0
+   IAR_78K0K                        - Compiller: IAR           Target: Renesas 78K0K
+   IAR_ARM_CA5_NOGIC                - Compiller: IAR           Target: ARM Cortex-A5 no GIC
+   IAR_ARM_CA9                      - Compiller: IAR           Target: ARM Cortex-A9
+   IAR_ARM_CM0                      - Compiller: IAR           Target: ARM Cortex-M0
+   IAR_ARM_CM3                      - Compiller: IAR           Target: ARM Cortex-M3
+   IAR_ARM_CM4F                     - Compiller: IAR           Target: ARM Cortex-M4 with FPU
+   IAR_ARM_CM4F_MPU                 - Compiller: IAR           Target: ARM Cortex-M4 with FPU and MPU
+   IAR_ARM_CM7                      - Compiller: IAR           Target: ARM Cortex-M7
+   IAR_ARM_CM23_NONSECURE           - Compiller: IAR           Target: ARM Cortex-M23 non-secure
+   IAR_ARM_CM23_SECURE              - Compiller: IAR           Target: ARM Cortex-M23 secure
+   IAR_ARM_CM23_NTZ_NONSECURE       - Compiller: IAR           Target: ARM Cortex-M23 non-trustzone non-secure
+   IAR_ARM_CM33_NONSECURE           - Compiller: IAR           Target: ARM Cortex-M33 non-secure
+   IAR_ARM_CM33_SECURE              - Compiller: IAR           Target: ARM Cortex-M33 secure
+   IAR_ARM_CM33_NTZ_NONSECURE       - Compiller: IAR           Target: ARM Cortex-M33 non-trustzone non-secure
+   IAR_ARM_CM55_NONSECURE           - Compiller: IAR           Target: ARM Cortex-M55 non-secure
+   IAR_ARM_CM55_SECURE              - Compiller: IAR           Target: ARM Cortex-M55 secure
+   IAR_ARM_CM55_NTZ_NONSECURE       - Compiller: IAR           Target: ARM Cortex-M55 non-trustzone non-secure
+   IAR_ARM_CM85_NONSECURE           - Compiller: IAR           Target: ARM Cortex-M85 non-secure
+   IAR_ARM_CM85_SECURE              - Compiller: IAR           Target: ARM Cortex-M85 secure
+   IAR_ARM_CM85_NTZ_NONSECURE       - Compiller: IAR           Target: ARM Cortex-M85 non-trustzone non-secure
+   IAR_ARM_CRX_NOGIC                - Compiller: IAR           Target: ARM Cortex-Rx no GIC
+   IAR_ATMEGA323                    - Compiller: IAR           Target: ATMega323
+   IAR_ATMEL_SAM7S64                - Compiller: IAR           Target: Atmel SAM7S64
+   IAR_ATMEL_SAM9XE                 - Compiller: IAR           Target: Atmel SAM9XE
+   IAR_AVR_AVRDX                    - Compiller: IAR           Target: AVRDx
+   IAR_AVR_MEGA0                    - Compiller: IAR           Target: AVR Mega0
+   IAR_AVR32_UC3                    - Compiller: IAR           Target: AVR32 UC3
+   IAR_LPC2000                      - Compiller: IAR           Target: LPC2000
+   IAR_MSP430                       - Compiller: IAR           Target: MSP430
+   IAR_MSP430X                      - Compiller: IAR           Target: MSP430X
+   IAR_RISC_V                       - Compiller: IAR           Target: RISC-V
+   IAR_RL78                         - Compiller: IAR           Target: Renesas RL78
+   IAR_RX100                        - Compiller: IAR           Target: Renesas RX100
+   IAR_RX600                        - Compiller: IAR           Target: Renesas RX600
+   IAR_RX700_V3_DPFPU               - Compiller: IAR           Target: Renesas RX700 v3 with DPFPU
+   IAR_RX_V2                        - Compiller: IAR           Target: Renesas RX v2
+   IAR_STR71X                       - Compiller: IAR           Target: STR71x
+   IAR_STR75X                       - Compiller: IAR           Target: STR75x
+   IAR_STR91X                       - Compiller: IAR           Target: STR91x
+   IAR_V850ES_FX3                   - Compiller: IAR           Target: Renesas V850ES/Fx3
+   IAR_V850ES_HX3                   - Compiller: IAR           Target: Renesas V850ES/Hx3
+   MIKROC_ARM_CM4F                  - Compiller: MikroC        Target: ARM Cortex-M4 with FPU
+   MPLAB_PIC18F                     - Compiller: MPLAB         Target: PIC18F
+   MPLAB_PIC24                      - Compiller: MPLAB         Target: PIC24
+   MPLAB_PIC32MEC14XX               - Compiller: MPLAB         Target: PIC32MEC14xx
+   MPLAB_PIC32MX                    - Compiller: MPLAB         Target: PIC32MX
+   MPLAB_PIC32MZ                    - Compiller: MPLAB         Target: PIC32MZ
+   MSVC_MINGW                       - Compiller: MSVC or MinGW Target: x86
+   OWATCOM_16BIT_DOS_FLSH186        - Compiller: Open Watcom   Target: 16 bit DOS Flsh186
+   OWATCOM_16BIT_DOS_PC             - Compiller: Open Watcom   Target: 16 bit DOS PC
+   PARADIGM_TERN_EE_LARGE           - Compiller: Paradigm      Target: Tern EE large
+   PARADIGM_TERN_EE_SMALL           - Compiller: Paradigm      Target: Tern EE small
+   RENESAS_RX100                    - Compiller: Renesas       Target: RX100
+   RENESAS_RX200                    - Compiller: Renesas       Target: RX200
+   RENESAS_RX600                    - Compiller: Renesas       Target: RX600
+   RENESAS_RX600_V2                 - Compiller: Renesas       Target: RX600 v2
+   RENESAS_RX700_V3_DPFPU           - Compiller: Renesas       Target: RX700 v3 with DPFPU
+   RENESAS_SH2A_FPU                 - Compiller: Renesas       Target: SH2A with FPU
+   ROWLEY_MSP430F449                - Compiller: Rowley        Target: MSP430F449
+   RVDS_ARM_CA9                     - Compiller: RVDS          Target: ARM Cortex-A9
+   RVDS_ARM_CM0                     - Compiller: RVDS          Target: ARM Cortex-M0
+   RVDS_ARM_CM3                     - Compiller: RVDS          Target: ARM Cortex-M3
+   RVDS_ARM_CM4_MPU                 - Compiller: RVDS          Target: ARM Cortex-M4 with MPU
+   RVDS_ARM_CM4F                    - Compiller: RVDS          Target: ARM Cortex-M4 with FPU
+   RVDS_ARM_CM7                     - Compiller: RVDS          Target: ARM Cortex-M7
+   RVDS_ARM7_LPC21XX                - Compiller: RVDS          Target: ARM7 LPC21xx
+   SDCC_CYGNAL                      - Compiller: SDCC          Target: Cygnal
+   SOFTUNE_MB91460                  - Compiller: Softune       Target: MB91460
+   SOFTUNE_MB96340                  - Compiller: Softune       Target: MB96340
+   TASKING_ARM_CM4F                 - Compiller: Tasking       Target: ARM Cortex-M4 with FPU
+   CDK_THEAD_CK802                  - Compiller: CDK           Target: T-head CK802
+   XCC_XTENSA                       - Compiller: XCC           Target: Xtensa
+   WIZC_PIC18                       - Compiller: WizC          Target: PIC18
+
+
+-- Configuring incomplete, errors occurred!
