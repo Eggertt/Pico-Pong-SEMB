@@ -26,12 +26,23 @@
 #define PIN_BUTTON_UP 0
 #define PIN_BUTTON_DOWN 6
 #define PIN_BUTTON_COLOR_TOGGLE 11
+#define PIN_PROFILING_LOGIC 28
+#define PIN_PROFILING_DRAW 27
 
 static void prvSetupHardware(void);
 static void prvLaunchRTOS();
 
 static struct mutex render_sync_mutex;
 static struct mutex game_state_mutex;
+
+typedef struct {
+  uint32_t logic_exec_us;
+  uint32_t logic_period_us;
+  uint32_t draw_exec_us;
+  uint32_t draw_period_us;
+} task_stats_t;
+
+volatile task_stats_t g_stats = {0};
 
 void render_loop() {
   while (true) {
@@ -46,14 +57,21 @@ void render_loop() {
     // Signal vblank at end of frame (scanline 0 means new frame started)
     if (scanline_id == 0) {
       vga_set_vblank(true);
+      static int frame_count = 0;
+      frame_count++;
+      if (frame_count >= 60) {
+        printf("Logic: E=%lu us, P=%lu us | Draw: E=%lu us, P=%lu us\n",
+               g_stats.logic_exec_us, g_stats.logic_period_us,
+               g_stats.draw_exec_us, g_stats.draw_period_us);
+        frame_count = 0;
+      }
     } else if (scanline_id == 10) {
       vga_set_vblank(false);
     }
 
-    // Read directly from canvas
-    uint16_t *canvas = vga_get_canvas();
-    uint16_t *current_slice = &canvas[scanline_id * CANVAS_WIDTH];
-    vga_render_scanline(scanline_buffer, current_slice);
+    // Render directly from internal front buffer (double buffered)
+    // We pass NULL because vga_render_scanline now manages buffers internally
+    vga_render_scanline(scanline_buffer, NULL);
 
     // End scanline generation
     scanvideo_end_scanline_generation(scanline_buffer);
@@ -61,32 +79,32 @@ void render_loop() {
 }
 
 void update_canvas(struct game_state *gs) {
-  uint16_t white_color =
-      (uint16_t)PICO_SCANVIDEO_PIXEL_FROM_RGB5(0xff, 0xff, 0xff);
-  uint16_t black_color = 0;
+  // Colors now 8-bit (RGB332)
+  uint8_t white_color = 0xFF; // 111 111 11
+  uint8_t black_color = 0x00;
 
-  // Determine colors based on mode
-  uint16_t ball_color;
-  uint16_t player_color;
-  uint16_t ai_color;
+  // Determine colors based on mode (RGB332 values)
+  uint8_t ball_color;
+  uint8_t player_color;
+  uint8_t ai_color;
 
   switch (gs->color_mode) {
   case 1: // Color Mode 1 (Blue/Red/Green)
-    // Ball: Lighter Blue
-    ball_color = (uint16_t)PICO_SCANVIDEO_PIXEL_FROM_RGB5(0x66, 0xcc, 0xff);
+    // Ball: Dark Blue
+    ball_color = 0x03; // 000 000 11 (Blue max)
     // Player: Red
-    player_color = (uint16_t)PICO_SCANVIDEO_PIXEL_FROM_RGB5(0xff, 0x00, 0x00);
+    player_color = 0xE0; // 111 000 00 (Red max)
     // AI: Green
-    ai_color = (uint16_t)PICO_SCANVIDEO_PIXEL_FROM_RGB5(0x00, 0xff, 0x00);
+    ai_color = 0x1C; // 000 111 00 (Green max)
     break;
 
   case 2: // Color Mode 2 (Red/Yellow/Blue)
-    // Ball: White for high contrast
-    ball_color = (uint16_t)PICO_SCANVIDEO_PIXEL_FROM_RGB5(0xff, 0x66, 0xb2);
-    // Player: Yellow/Gold
-    player_color = (uint16_t)PICO_SCANVIDEO_PIXEL_FROM_RGB5(0xff, 0xd7, 0x00);
-    // AI: Blue
-    ai_color = (uint16_t)PICO_SCANVIDEO_PIXEL_FROM_RGB5(0x66, 0xcc, 0xff);
+    // Ball: Pink/Magenta
+    ball_color = 0xE3; // 111 000 11 (Red+Blue)
+    // Player: Blue (swapped per user request)
+    player_color = 0x17; // 000 101 11 (Blue-ish) or 0x03
+    // AI: Yellow (swapped per user request)
+    ai_color = 0xFC; // 111 111 00 (Red+Green = Yellow)
     break;
 
   default: // Default (0): White
@@ -101,12 +119,13 @@ void update_canvas(struct game_state *gs) {
   gs->player.color = player_color;
   gs->ai.color = ai_color;
 
-  // Wait for VBlank to avoid tearing
-  while (!vga_is_vblank()) {
-    // Busy wait for vblank
-  }
+  // NO WAIT FOR VBLANK HERE inside task logic anymore!
+  // We draw to back buffer immediately.
 
-  uint16_t *canvas = vga_get_canvas();
+  uint8_t *canvas = vga_get_back_buffer();
+
+  // Clear the back buffer completely to prevent trails/ghosting
+  vga_clear_canvas(canvas);
 
   // Draw Dashed Line
   {
@@ -171,6 +190,9 @@ void update_canvas(struct game_state *gs) {
   }
 
   mutex_exit(&game_state_mutex);
+
+  // Request swap at next VBlank
+  vga_swap_buffers();
 }
 
 static void prvGameLogicTask(void *pvParameters) {
@@ -179,7 +201,14 @@ static void prvGameLogicTask(void *pvParameters) {
   TickType_t xLastWakeTime = xTaskGetTickCount();
   const TickType_t xFrequency = pdMS_TO_TICKS(33);
 
+  uint32_t last_start_time = time_us_32();
+
   for (;;) {
+    uint32_t start_time = time_us_32();
+    g_stats.logic_period_us = start_time - last_start_time;
+    last_start_time = start_time;
+
+    gpio_put(PIN_PROFILING_LOGIC, 1);
     int move_direction = 0; // Default: no movement
 
     // Poll buttons
@@ -217,6 +246,8 @@ static void prvGameLogicTask(void *pvParameters) {
     }
     mutex_exit(&game_state_mutex);
 
+    gpio_put(PIN_PROFILING_LOGIC, 0);
+    g_stats.logic_exec_us = time_us_32() - start_time;
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
   }
 }
@@ -227,17 +258,32 @@ static void prvGameDrawCanvasTask(void *pvParameters) {
   TickType_t xLastWakeTime = xTaskGetTickCount();
   const TickType_t xFrequency = pdMS_TO_TICKS(25);
 
+  uint32_t last_start_time = time_us_32();
+
   for (;;) {
+    uint32_t start_time = time_us_32();
+    g_stats.draw_period_us = start_time - last_start_time;
+    last_start_time = start_time;
+
+    gpio_put(PIN_PROFILING_DRAW, 1);
     update_canvas(gs);
+    gpio_put(PIN_PROFILING_DRAW, 0);
+
+    g_stats.draw_exec_us = time_us_32() - start_time;
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
   }
 }
 
 int main(void) {
-  // Initialize VGA first (sets up all video pins)
+  // Initialize USB Serial first and wait for connection/enumeration
+  stdio_usb_init();
+  sleep_ms(2000); // Give time for USB to enumerate
+  printf("System Booting...\n");
+
+  // Initialize VGA first (sets up all video pins and clocks)
   vga_init();
 
-  // Initialize hardware and override specific VGA pins for buttons
+  // Initialize hardware (buttons, etc)
   prvSetupHardware();
 
   mutex_init(&game_state_mutex);
@@ -245,16 +291,11 @@ int main(void) {
 
   multicore_launch_core1(render_loop);
 
-  uint16_t ball_color =
-      (uint16_t)PICO_SCANVIDEO_PIXEL_FROM_RGB5(0x42, 0xba, 0xff);
+  uint8_t ball_color = 0x1F;   // Blue-ish
+  uint8_t player_color = 0xE0; // Red
+  uint8_t AI_color = 0x1C;     // Green
 
-  uint16_t player_color =
-      (uint16_t)PICO_SCANVIDEO_PIXEL_FROM_RGB5(0xAC, 0x11, 0x22);
-
-  uint16_t AI_color =
-      (uint16_t)PICO_SCANVIDEO_PIXEL_FROM_RGB5(0xDC, 0x01, 0x29);
-
-  uint16_t bg_color_1 = 0;
+  uint8_t bg_color_1 = 0;
 
   struct pong_rect ball = {
       .x = 20,
@@ -315,7 +356,7 @@ int main(void) {
 
 static void prvSetupHardware(void) {
   /* Want to be able to printf */
-  stdio_usb_init();
+  // stdio_usb_init(); // Moved to main
 
   // Initialize buttons (reclaiming VGA pins)
   // By initializing these AFTER vga_init() (called in main), we switch them
@@ -334,6 +375,15 @@ static void prvSetupHardware(void) {
   gpio_init(PIN_BUTTON_COLOR_TOGGLE);
   gpio_set_dir(PIN_BUTTON_COLOR_TOGGLE, GPIO_IN);
   gpio_pull_up(PIN_BUTTON_COLOR_TOGGLE);
+
+  // Initialize Profiling Pins
+  gpio_init(PIN_PROFILING_LOGIC);
+  gpio_set_dir(PIN_PROFILING_LOGIC, GPIO_OUT);
+  gpio_put(PIN_PROFILING_LOGIC, 0);
+
+  gpio_init(PIN_PROFILING_DRAW);
+  gpio_set_dir(PIN_PROFILING_DRAW, GPIO_OUT);
+  gpio_put(PIN_PROFILING_DRAW, 0);
 }
 
 static void prvLaunchRTOS() {

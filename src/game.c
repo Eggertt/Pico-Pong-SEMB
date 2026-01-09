@@ -78,7 +78,7 @@ void gs_update_ai(struct game_state *gs) {
 }
 
 // function that calculates if the ball is going to hit the left or right wall
-// and resets the game and the ball spwaning at the center
+// and resets the game and the ball spawning at the center
 void gs_reset_ball(struct game_state *gs) {
   gs->ball.x = gs->canvas_w / 2;
   gs->ball.y = gs->canvas_h / 2;

@@ -76,6 +76,8 @@ target_compile_options( main PUBLIC
     $<$<COMPILE_LANG_AND_ID:C,Clang>:-Weverything>
 )
 
+target_link_options(main PRIVATE "LINKER:--print-memory-usage")
+
 pico_set_program_name(main "pico_vga_arcade")
 pico_set_program_version(main "0.1")
 
